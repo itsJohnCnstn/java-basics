@@ -19,20 +19,13 @@ class AbstractComputerFactoryTest {
 
         // To check multiple conditions in one test and see all the failures together instead of fail fast
         assertSoftly(softAssertions -> {
-            assertInstanceOf(PCComputer.class, pc);
-            assertInstanceOf(LaptopComputer.class, laptop1);
-            assertInstanceOf(LaptopComputer.class, laptop2);
-            assertNotEquals(laptop1, laptop2);
-
-            /*
-                assertThrows(IllegalArgumentException.class, () -> {
-                    // code that should throw the exception
-                    someMethodThatThrows();
-                });
-            */
-            assertThrows(IllegalArgumentException.class, () -> {
-                AbstractComputerFactory.buildComputer("wrong type");
-            });
+            softAssertions.assertThat(pc).isInstanceOf(PCComputer.class);
+            softAssertions.assertThat(laptop1).isInstanceOf(LaptopComputer.class);
+            softAssertions.assertThat(laptop2).isInstanceOf(LaptopComputer.class);
+            softAssertions.assertThat(laptop1).isNotEqualTo(laptop2);
+            softAssertions.assertThatThrownBy(() ->
+                            AbstractComputerFactory.buildComputer("wrong type"))
+                    .isInstanceOf(IllegalArgumentException.class);
         });
     }
 
@@ -62,6 +55,12 @@ class AbstractComputerFactoryTest {
 
     @Test
     void buildComputer_shouldThrowIfWrongType() {
+            /*
+                assertThrows(IllegalArgumentException.class, () -> {
+                    // code that should throw the exception
+                    someMethodThatThrows();
+                });
+            */
         assertThrows(IllegalArgumentException.class, () -> {
             AbstractComputerFactory.buildComputer("wrong type");
         });
